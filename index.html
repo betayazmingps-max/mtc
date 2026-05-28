@@ -238,7 +238,7 @@ svg { display: block; }
 </head>
 <body>
 
-<button class="back-mobile" onclick="closeMail(); return false;">← Volver</button>
+<button class="back-mobile" onclick="closeMail()">← Volver</button>
 
 
 <!-- SVG SPRITE DEFS -->
@@ -635,7 +635,7 @@ function openMsg(id) {
 
   document.getElementById('detail-content').innerHTML = `
     <div class="dt-topbar">
-      <button class="dt-back" onclick="goTo('bandeja')">
+      <button class="dt-back" onclick="closeMobileDetail()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="#5f6368"><use href="#ico-back"/></svg>
       </button>
       <div class="dt-title">${m.subjectFull}</div>
@@ -667,7 +667,10 @@ function goTo(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
-  if (id === 'bandeja') renderList('list2', null);
+  if (id === 'bandeja') {
+    renderList('list2', null);
+    closeMobileDetail();
+  }
 }
 
 renderList('list2', null);
@@ -702,29 +705,12 @@ document.addEventListener('click', function(e) {
 
 <script>
 function closeMail() {
+    const panel = document.querySelector('.mail-view') ||
+                  document.querySelector('.detail-panel') ||
+                  document.querySelector('.message-view');
 
-    // Panel detalle móvil
-    const detail =
-        document.querySelector('.detail-col') ||
-        document.querySelector('.mail-view') ||
-        document.querySelector('.detail-panel') ||
-        document.querySelector('.message-view');
-
-    if(detail){
-        detail.classList.remove('active');
-        detail.classList.remove('mobile-open');
-        detail.style.display = '';
-    }
-
-    // Volver a mostrar lista de notificaciones
-    const list =
-        document.querySelector('.msg-panel') ||
-        document.querySelector('.mail-list') ||
-        document.querySelector('.notification-list');
-
-    if(list){
-        list.style.display = 'flex';
-        list.style.visibility = 'visible';
+    if(panel){
+        panel.classList.remove('active');
     }
 }
 
@@ -739,19 +725,7 @@ document.addEventListener('click', function(e){
 
         if(window.innerWidth <= 768 && panel){
             setTimeout(() => {
-                
-panel.classList.add('active');
-panel.classList.add('mobile-open');
-
-const list =
-    document.querySelector('.msg-panel') ||
-    document.querySelector('.mail-list') ||
-    document.querySelector('.notification-list');
-
-if(list){
-    list.style.display = 'none';
-}
-
+                panel.classList.add('active');
             }, 100);
         }
     }
