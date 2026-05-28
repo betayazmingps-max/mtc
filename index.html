@@ -176,6 +176,43 @@ svg { display: block; }
   .detail-col { min-height: 100vh; }
 }
 </style>
+  <style>
+@media (max-width: 768px) {
+  body { overflow-x: hidden; }
+
+  #sidebar { display: none !important; }
+
+  #lista,
+  #detalle {
+    position: fixed;
+    top: 56px; /* altura de tu topbar */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 56px);
+    background: #fff;
+    transition: transform .3s ease;
+    z-index: 10;
+  }
+
+  body.mobile-list #lista { transform: translateX(0); }
+  body.mobile-list #detalle { transform: translateX(100%); }
+
+  body.mobile-detail #lista { transform: translateX(-100%); }
+  body.mobile-detail #detalle { transform: translateX(0); }
+
+  .mobile-back {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 16px;
+    padding: 12px;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-back { display: none; }
+}
+</style>
 </head>
 <body>
 
