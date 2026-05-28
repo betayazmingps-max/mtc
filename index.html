@@ -729,5 +729,56 @@ document.addEventListener('click', function(e){
 });
 </script>
 
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // Guarda la pantalla actual antes de abrir otra
+  let ultimaPantalla = null;
+
+  // Detectar cualquier elemento que abra otra pantalla
+  document.querySelectorAll("[onclick]").forEach(el => {
+    const original = el.getAttribute("onclick");
+
+    if (original && original.includes("classList")) {
+      el.addEventListener("click", () => {
+        const activa = document.querySelector(".screen.active");
+        if (activa) {
+          ultimaPantalla = activa.id;
+        }
+      });
+    }
+  });
+
+  // Función universal para volver atrás
+  window.volverLista = function () {
+    const activa = document.querySelector(".screen.active");
+
+    if (activa) {
+      activa.classList.remove("active");
+    }
+
+    // Buscar pantalla de lista
+    let lista =
+      document.getElementById("notificaciones") ||
+      document.getElementById("listaNotificaciones") ||
+      document.querySelector(".screen");
+
+    if (lista) {
+      lista.classList.add("active");
+    }
+  };
+
+  // Flechas atrás
+  document.querySelectorAll(".back-btn, .btn-back, .arrow-back").forEach(btn => {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      volverLista();
+    });
+  });
+
+});
+</script>
+
 </body>
 </html>
