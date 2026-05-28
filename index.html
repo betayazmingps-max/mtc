@@ -161,102 +161,79 @@ body { font-family: var(--font); background: var(--gray-bg); min-height: 100vh; 
 svg { display: block; }
 
 
-/* ── RESPONSIVE MÓVIL ── */
-@media (max-width: 420px) {
-  .login-wrap { padding: 0; align-items: flex-start; }
-  .login-card {
-    max-width: 100%;
-    min-height: calc(100vh - 48px);
-    border-radius: 0;
-    padding: 20px 16px 28px;
-    box-shadow: none;
-  }
-  #login { background-attachment: scroll; }
-  .lf select, .lf input { height: 50px; font-size: 16px; }
-  .btn-blue { height: 50px; font-size: 15px; }
-  .topbar { height: 48px; padding: 0 12px; }
-  .tb-title { font-size: 13px; }
-  .app-shell { flex-direction: column; height: auto; }
-  .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding-top: 10px; }
-  .msg-panel { width: 100%; border-right: none; }
-  .detail-col { min-height: 100vh; }
-}
 
-/* ===== FIX MOVIL PANEL NOTIFICACION ===== */
+/* ── MÓVIL: UNA PANTALLA A LA VEZ ── */
 @media (max-width: 768px) {
 
-  .main-content,
-  .content,
-  .layout,
-  .inbox-container {
-    flex-direction: row !important;
+  /* En móvil, cada screen ocupa toda la pantalla */
+  .screen { position: fixed; inset: 0; z-index: 10; overflow-y: auto; }
+
+  /* App shell en columna, sin scroll horizontal */
+  .app-shell {
+    flex-direction: column !important;
+    height: 100dvh !important;
+    overflow: hidden;
   }
 
-  .mail-view,
-  .detail-panel,
-  .message-view {
-    position: fixed !important;
-    top: 56px !important;
-    right: -100% !important;
+  /* Sidebar oculto por defecto en móvil */
+  .sidebar { display: none !important; }
+
+  /* Panel de mensajes: ocupa toda la pantalla */
+  .msg-panel {
     width: 100% !important;
-    height: calc(100vh - 56px) !important;
+    border-right: none !important;
+    height: 100dvh !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Detalle: ocupa toda la pantalla, oculto por defecto */
+  .detail-col {
+    display: none;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 50 !important;
     background: #fff !important;
-    z-index: 9999 !important;
-    transition: .3s ease !important;
-    overflow-y: auto !important;
+    flex-direction: column;
+    height: 100dvh !important;
+    width: 100% !important;
+    overflow-y: auto;
+  }
+  .detail-col.mobile-open {
+    display: flex !important;
   }
 
-  .mail-view.active,
-  .detail-panel.active,
-  .message-view.active {
-    right: 0 !important;
-  }
-
-  .back-mobile {
-    display: block !important;
-    width: 100%;
-    padding: 14px;
-    border: none;
-    background: #c8102e;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
+  /* Botón volver en detalle */
+  .mobile-back-btn {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--red);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    background: #fff;
     position: sticky;
     top: 0;
-    z-index: 10000;
+    z-index: 10;
   }
+
+  /* Login card full width */
+  .login-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+    min-height: 100dvh;
+    box-shadow: none !important;
+  }
+  .login-wrap { padding: 0 !important; align-items: stretch !important; }
+  #login { background-attachment: scroll !important; }
 }
 
-@media (min-width: 769px) {
-  .back-mobile {
-    display: none !important;
-  }
-}
-
-
-@media (max-width: 768px) {
-
-  .tb-right {
-    transform: translateX(-95px) !important;
-  }
-
-  .tb-user-block {
-    max-width: 180px !important;
-    overflow: hidden !important;
-  }
-
-  .tb-user .un {
-    font-size: 11px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-
-  .tb-user .ur {
-    font-size: 10px !important;
-  }
-}
-
+/* Botón volver oculto en desktop */
+.mobile-back-btn { display: none; }
 </style>
 </head>
 <body>
@@ -394,6 +371,10 @@ svg { display: block; }
       <div class="msg-list" id="list2"></div>
     </div>
     <div class="detail-col">
+      <div class="mobile-back-btn" onclick="closeMobileDetail()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--red)"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Volver a notificaciones
+      </div>
       <div class="detail-empty">
         <svg width="64" height="64" viewBox="0 0 24 24" fill="#d0d5dd"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         <span>Seleccione un mensaje para verlo</span>
@@ -462,6 +443,10 @@ svg { display: block; }
       <div class="msg-list" id="list3"></div>
     </div>
     <div class="detail-col">
+      <div class="mobile-back-btn" onclick="closeMobileDetail()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--red)"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Volver a notificaciones
+      </div>
       <div class="detail-view" id="detail-content"></div>
     </div>
   </div>
@@ -632,6 +617,7 @@ function renderList(containerId, selected) {
 }
 
 function openMsg(id) {
+  openMobileDetail();
   selectedId = id;
   const m = mensajes[id];
   const adjuntosHtml = m.adjuntos.length > 0 ? `
@@ -690,6 +676,15 @@ renderList('list3', null);
 function toggleLogout(el) {
   const menu = el.querySelector('.logout-menu');
   menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+function openMobileDetail() {
+  if (window.innerWidth <= 768) {
+    document.querySelectorAll('.detail-col').forEach(d => d.classList.add('mobile-open'));
+  }
+}
+function closeMobileDetail() {
+  document.querySelectorAll('.detail-col').forEach(d => d.classList.remove('mobile-open'));
 }
 
 function doLogout() {
