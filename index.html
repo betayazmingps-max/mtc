@@ -30,7 +30,13 @@ body { font-family: var(--font); background: var(--gray-bg); min-height: 100vh; 
 .tb-gob { font-size: 20px; font-weight: 700; letter-spacing: -.3px; }
 .tb-sep { width: 1px; height: 30px; background: rgba(255,255,255,.4); margin: 0 16px; }
 .tb-title { color: #fff; font-size: 15px; font-weight: 500; }
-.tb-right { display: flex; align-items: center; gap: 0; margin-left: auto; padding-right: 0; }
+.tb-right {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-left: auto;
+  padding-right: 120px;
+}
 .tb-user-block {
   display: flex; align-items: center; gap: 10px;
   background: rgba(0,0,0,.15); border-radius: 25px;
@@ -175,9 +181,88 @@ svg { display: block; }
   .msg-panel { width: 100%; border-right: none; }
   .detail-col { min-height: 100vh; }
 }
+
+/* ===== FIX MOVIL PANEL NOTIFICACION ===== */
+@media (max-width: 768px) {
+
+  .main-content,
+  .content,
+  .layout,
+  .inbox-container {
+    flex-direction: row !important;
+  }
+
+  .mail-view,
+  .detail-panel,
+  .message-view {
+    position: fixed !important;
+    top: 56px !important;
+    right: -100% !important;
+    width: 100% !important;
+    height: calc(100vh - 56px) !important;
+    background: #fff !important;
+    z-index: 9999 !important;
+    transition: .3s ease !important;
+    overflow-y: auto !important;
+  }
+
+  .mail-view.active,
+  .detail-panel.active,
+  .message-view.active {
+    right: 0 !important;
+  }
+
+  .back-mobile {
+    display: block !important;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    background: #c8102e;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+  }
+}
+
+@media (min-width: 769px) {
+  .back-mobile {
+    display: none !important;
+  }
+}
+
+
+@media (max-width: 768px) {
+
+  .tb-right {
+    transform: translateX(-95px) !important;
+  }
+
+  .tb-user-block {
+    max-width: 180px !important;
+    overflow: hidden !important;
+  }
+
+  .tb-user .un {
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .tb-user .ur {
+    font-size: 10px !important;
+  }
+}
+
 </style>
 </head>
 <body>
+
+<button class="back-mobile" onclick="closeMail()">← Volver</button>
+
 
 <!-- SVG SPRITE DEFS -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -619,5 +704,35 @@ document.addEventListener('click', function(e) {
   }
 });
 </script>
+
+<script>
+function closeMail() {
+    const panel = document.querySelector('.mail-view') ||
+                  document.querySelector('.detail-panel') ||
+                  document.querySelector('.message-view');
+
+    if(panel){
+        panel.classList.remove('active');
+    }
+}
+
+document.addEventListener('click', function(e){
+
+    const item = e.target.closest('.mail-item, .message-item, .notification-item');
+
+    if(item){
+        const panel = document.querySelector('.mail-view') ||
+                      document.querySelector('.detail-panel') ||
+                      document.querySelector('.message-view');
+
+        if(window.innerWidth <= 768 && panel){
+            setTimeout(() => {
+                panel.classList.add('active');
+            }, 100);
+        }
+    }
+});
+</script>
+
 </body>
 </html>
