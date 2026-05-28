@@ -238,7 +238,7 @@ svg { display: block; }
 </head>
 <body>
 
-<button class="back-mobile" onclick="closeMail()">← Volver</button>
+<button class="back-mobile" onclick="closeMail(); return false;">← Volver</button>
 
 
 <!-- SVG SPRITE DEFS -->
@@ -702,12 +702,29 @@ document.addEventListener('click', function(e) {
 
 <script>
 function closeMail() {
-    const panel = document.querySelector('.mail-view') ||
-                  document.querySelector('.detail-panel') ||
-                  document.querySelector('.message-view');
 
-    if(panel){
-        panel.classList.remove('active');
+    // Panel detalle móvil
+    const detail =
+        document.querySelector('.detail-col') ||
+        document.querySelector('.mail-view') ||
+        document.querySelector('.detail-panel') ||
+        document.querySelector('.message-view');
+
+    if(detail){
+        detail.classList.remove('active');
+        detail.classList.remove('mobile-open');
+        detail.style.display = '';
+    }
+
+    // Volver a mostrar lista de notificaciones
+    const list =
+        document.querySelector('.msg-panel') ||
+        document.querySelector('.mail-list') ||
+        document.querySelector('.notification-list');
+
+    if(list){
+        list.style.display = 'flex';
+        list.style.visibility = 'visible';
     }
 }
 
@@ -722,61 +739,22 @@ document.addEventListener('click', function(e){
 
         if(window.innerWidth <= 768 && panel){
             setTimeout(() => {
-                panel.classList.add('active');
+                
+panel.classList.add('active');
+panel.classList.add('mobile-open');
+
+const list =
+    document.querySelector('.msg-panel') ||
+    document.querySelector('.mail-list') ||
+    document.querySelector('.notification-list');
+
+if(list){
+    list.style.display = 'none';
+}
+
             }, 100);
         }
     }
-});
-</script>
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-  // Guarda la pantalla actual antes de abrir otra
-  let ultimaPantalla = null;
-
-  // Detectar cualquier elemento que abra otra pantalla
-  document.querySelectorAll("[onclick]").forEach(el => {
-    const original = el.getAttribute("onclick");
-
-    if (original && original.includes("classList")) {
-      el.addEventListener("click", () => {
-        const activa = document.querySelector(".screen.active");
-        if (activa) {
-          ultimaPantalla = activa.id;
-        }
-      });
-    }
-  });
-
-  // Función universal para volver atrás
-  window.volverLista = function () {
-    const activa = document.querySelector(".screen.active");
-
-    if (activa) {
-      activa.classList.remove("active");
-    }
-
-    // Buscar pantalla de lista
-    let lista =
-      document.getElementById("notificaciones") ||
-      document.getElementById("listaNotificaciones") ||
-      document.querySelector(".screen");
-
-    if (lista) {
-      lista.classList.add("active");
-    }
-  };
-
-  // Flechas atrás
-  document.querySelectorAll(".back-btn, .btn-back, .arrow-back").forEach(btn => {
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      volverLista();
-    });
-  });
-
 });
 </script>
 
