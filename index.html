@@ -184,6 +184,7 @@ svg { display: block; }
 
   #lista,
   #detalle {
+    <button id="btn-volver" class="mobile-back">← Volver</button>
     position: fixed;
     top: 56px; /* altura de tu topbar */
     left: 0;
@@ -656,5 +657,35 @@ document.addEventListener('click', function(e) {
   }
 });
 </script>
+ <script>
+function isMobile() {
+  return window.innerWidth <= 768;
+}
+
+function showList() {
+  document.body.classList.remove('mobile-detail');
+  document.body.classList.add('mobile-list');
+}
+
+function showDetail() {
+  document.body.classList.remove('mobile-list');
+  document.body.classList.add('mobile-detail');
+}
+
+if (isMobile()) showList();
+
+/* Botón volver */
+document.getElementById('btn-volver')?.addEventListener('click', showList);
+
+/* Interceptar goTo SOLO en móvil */
+const _goTo = window.goTo;
+window.goTo = function (screen) {
+  if (isMobile() && screen === 'detalle') {
+    showDetail();
+    return;
+  }
+  if (_goTo) _goTo(screen);
+};
+</script> 
 </body>
 </html>
